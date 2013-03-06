@@ -26,13 +26,25 @@
     
     .box { width: 280px; border: 1px solid silver;  background-color: white; margin: 5px; padding: 0px; }
     .box img { max-width: 250px; }
-    .box .target { background-color: #eeeeee; color: gray; padding: 0.2em 0.5em; }
+    .box .target { background-color: #eeeeee; color: gray; padding: 0.2em 0.5em; height:1.3em;}
     .box .target a { color: gray; }
     .box .entry { margin: 0.5em; }
     .box .entry .meta { border-bottom: 1px solid #eeeeee; margin: 0.1em 0 0.5em 0; color: gray; }
     .box .entry .meta .user .icon { width: 24px; height 24px; vertical-align: middle; margin-right: 0.5em; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; } 
     .box h1, .box h2, .box h3, .box h4, .box h5, .box h6 { margin-bottom: 0.2em; }
 
+    .favicon {
+	width:16px;
+ 	height:16px;
+	float:left;
+  	background-repeat: no-repeat;
+	background-position: center;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	margin-right:0.5em;
+    }
     
 </style>
     
@@ -105,9 +117,20 @@
         if (!target) return ""; 
         var buf = "";
         if (target.url) {
-            buf = "<a href='" + escapeAttribute(target.url) + "'>" + target.displayName + "</a>";
+            var url = target.url.replace(/^(https?:\/\/([^/]+)\/).*$/,"$1");
+            if (url) {
+                url += "favicon.ico";
+	        buf = "<div class='favicon' style='background-image: url("+url+");'></div>";
+            }
+            buf += "<a href='" + escapeAttribute(target.url) + "'>" + target.displayName + "</a>";
         } else {
-            buf = target.displayName 
+            if (target.id) {
+		var url = target.id;
+		url = "http://"+url.substring(0, url.indexOf(":"))+"/favicon.ico";
+		buf = "<div class='favicon' style='background-image: url("+url+");'></div>";
+		
+            }
+            buf += target.displayName 
         }
         buf = "<div class='target'>" + buf + "</div>";
         return buf;
